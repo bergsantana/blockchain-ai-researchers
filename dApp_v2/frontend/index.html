@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Evidências do Dataset — dApp</title>
+  <link rel="stylesheet" href="style.css" />
+  <!-- Web3.js v4 via CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/web3@4.16.0/dist/web3.min.js"></script>
+</head>
+<body>
+  <main class="container">
+    <header>
+      <h1>🔎 Evidências do Dataset</h1>
+      <p class="sub">
+        Registre <em>afirmações</em> sobre o dataset de tweets (<code>twitter_training.csv</code>)
+        e o caminho para as evidências. Projeto de estudo — rede Sepolia (testnet).
+      </p>
+    </header>
+
+    <!-- Aviso de rede errada (preenchido pelo app.js) -->
+    <div id="avisoRede" class="aviso" hidden>
+      <span>Você não está na rede Sepolia.</span>
+      <button id="btnTrocarRede">Trocar para Sepolia</button>
+    </div>
+
+    <section class="card">
+      <div class="linha">
+        <button id="btnConectar">Conectar MetaMask</button>
+        <div class="info">
+          <span>Conta: <strong id="conta">—</strong></span>
+          <span>Saldo: <strong id="saldoEth">—</strong></span>
+          <span>Rede: <strong id="rede">—</strong></span>
+          <span>Reputação: <strong id="reputacao">—</strong> <small id="papel"></small></span>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Dataset de referência</h2>
+      <dl class="dados">
+        <dt>Nome</dt><dd id="dsNome">—</dd>
+        <dt>SHA-256</dt><dd id="dsHash" class="mono">—</dd>
+        <dt>Linhas</dt><dd id="dsLinhas">—</dd>
+        <dt>Download</dt><dd id="dsUri">—</dd>
+        <dt>Contrato</dt><dd id="ctLink">—</dd>
+      </dl>
+      <details>
+        <summary>Verificar um arquivo no meu computador</summary>
+        <p class="meta">
+          Escolha o CSV (ou um arquivo de evidência). O navegador calcula o SHA-256 localmente
+          e compara com o dataset e com as evidências registradas.
+        </p>
+        <input type="file" id="arquivoHash" />
+        <p id="resultadoHash" class="meta mono"></p>
+      </details>
+    </section>
+
+    <section class="card">
+      <h2>Afirmações registradas <span id="totalAf" class="contagem"></span></h2>
+      <div id="listaAf" class="lista"><p class="vazio">Conecte a carteira para ler o contrato.</p></div>
+      <button id="btnAtualizar" class="secundario" disabled>Recarregar</button>
+    </section>
+
+    <section class="card">
+      <h2>Registrar afirmação</h2>
+      <p class="meta">
+        Exemplo: “<em>Borderlands</em> tem <strong>1020</strong> linhas <em>Positive</em>”.
+        Gere o hash e o arquivo com <code>python3 scripts/evidencia.py contar Borderlands Positive</code>.
+        O depósito <strong id="taxaTxt">—</strong> volta se a afirmação for confirmada.
+      </p>
+      <form id="formRegistro" class="form" autocomplete="off">
+        <label>Entidade
+          <input id="fEntidade" list="listaEntidades" placeholder="Borderlands" maxlength="64" required />
+          <datalist id="listaEntidades"></datalist>
+        </label>
+        <label>Sentimento
+          <select id="fSentimento">
+            <option value="0">Positive</option>
+            <option value="1">Negative</option>
+            <option value="2">Neutral</option>
+            <option value="3">Irrelevant</option>
+          </select>
+        </label>
+        <label>Quantidade de linhas
+          <input id="fQuantidade" type="number" min="0" step="1" placeholder="1020" required />
+        </label>
+        <label>Hash da evidência (SHA-256)
+          <input id="fHash" class="mono" placeholder="0x…64 caracteres hex" required />
+        </label>
+        <label>Onde achar a evidência (URL)
+          <input id="fUri" placeholder="https://raw.githubusercontent.com/…/Borderlands_Positive.txt" maxlength="200" required />
+        </label>
+        <button id="btnRegistrar" type="submit" disabled>Registrar (envia ETH)</button>
+      </form>
+    </section>
+
+    <section class="card" id="cardAutor" hidden>
+      <h2>Atualizar evidência de uma afirmação minha</h2>
+      <form id="formEvidencia" class="form" autocomplete="off">
+        <label>Id da afirmação
+          <input id="eId" type="number" min="0" step="1" required />
+        </label>
+        <label>Novo hash
+          <input id="eHash" class="mono" placeholder="0x…" required />
+        </label>
+        <label>Nova URL
+          <input id="eUri" maxlength="200" required />
+        </label>
+        <button type="submit">Anexar evidência</button>
+      </form>
+    </section>
+
+    <section class="card">
+      <h2>Meu saldo no contrato</h2>
+      <div class="linha">
+        <span><strong id="saldoContrato">—</strong> ETH disponíveis para saque</span>
+        <button id="btnSacar" disabled>Sacar</button>
+      </div>
+    </section>
+
+    <section class="card card-admin" id="cardAdmin" hidden>
+      <h2>🔐 Painel do dono (curador)</h2>
+      <p class="meta">
+        Pendentes: <strong id="admPendentes">—</strong>. Para decidir, baixe o CSV, confira o hash,
+        rode <code>scripts/evidencia.py</code> e compare com a afirmação. Use os botões
+        <em>Confirmar</em>/<em>Refutar</em> nos cartões acima.
+        Confirmar devolve o depósito ao autor; refutar o transfere ao dono.
+      </p>
+    </section>
+
+    <section class="card">
+      <h2>Transações</h2>
+      <ul id="txLista" class="eventos"><li class="vazio">Nenhuma transação nesta sessão.</li></ul>
+    </section>
+
+    <section class="card">
+      <h2>Histórico (eventos do contrato)</h2>
+      <ul id="historico" class="eventos"><li class="vazio">Nenhum evento carregado.</li></ul>
+    </section>
+
+    <p id="status" class="status" role="status"></p>
+  </main>
+
+  <script src="contrato.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
