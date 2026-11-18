@@ -1,7 +1,7 @@
 # Evidências do Dataset — dApp de estudo (v2)
 
-Projeto introdutório de blockchain: um contrato **Solidity** na **Sepolia** + frontend em
-**HTML/CSS/JS puros + Web3.js v4 + MetaMask**, seguindo o `guia.docx`.
+Projeto de blockchain: um contrato **Solidity** na **Sepolia** + frontend em
+**HTML/CSS/JS puros + Web3.js v4 + MetaMask**.
 Evolui o exemplo `dApp_v1` (Mural de Mensagens) para um caso com regra de negócio.
 
 ## 1. Tema e problema resolvido
@@ -42,10 +42,10 @@ Estados (`enum Status`): `Pendente → Confirmada | Refutada | Cancelada`.
 
 | Integrante | Papel |
 |---|---|
-| _preencher_ | Contrato (Solidity, testes no Remix) |
-| _preencher_ | Frontend (HTML/CSS) |
-| _preencher_ | Integração Web3 |
-| _preencher_ | Documentação e QA |
+| Wanderberg de Melo Santana | Contrato (Solidity, testes no Remix) |
+| Wanderberg de Melo Santana  | Frontend (HTML/CSS) |
+| Wanderberg de Melo Santana  | Integração Web3 |
+| Wanderberg de Melo Santana  | Documentação e QA |
 
 ## 3. Dados do deploy (preencher após implantar)
 
@@ -86,21 +86,8 @@ dApp_v2/
 | `sacar()` | qualquer um com saldo | transfere o saldo acumulado (*pull payment*) | `Sacado` | `SaldoInsuficiente`, `require` (falha no envio) |
 | `obterAfirmacao(id)`, `listar(inicio, limite)`, `totalAfirmacoes()`, `resumoDoAutor(addr)`, `datasetConfere(hash)`, `impressao(...)` | qualquer um | leituras gratuitas | — | `AfirmacaoInexistente` |
 
-## 6. Tabela de recursos de Solidity (7 grupos)
+## 6. Segurança (resumo)
 
-Linhas de `contracts/EvidenciasDataset.sol`. Cada grupo está marcado no código com `// [Recurso: …]`.
-
-| Grupo | Onde aparece | Por que foi usado |
-|---|---|---|
-| **TiposDeDados** | `uint256` (`quantidade`, `TAXA_REGISTRO`); `int256` (`reputacao`, l.72 — pode ser negativa); `bool` (`confirmada`, `apoiou`); `address payable immutable DONO` (l.51); `string` (`entidade`, `evidenciaURI`); `bytes32` (`DATASET_HASH`, `evidenciaHash`); `constant` (l.58–63); `immutable` (l.51–55) | hashes SHA-256 cabem em `bytes32`; dono/dataset nunca mudam (`immutable` é mais barato e prova imutabilidade); a taxa é fixa (`constant`) |
-| **Funcoes** | `constructor` l.166; `external` (`registrarAfirmacao`, `apoiar`, `resolver`…); `public view` `obterAfirmacao` l.309 (reusada por `listar`); `public pure` `impressao` l.368; `internal` `_validarCampos` l.377; `private` `_creditar` l.396; `payable` `registrarAfirmacao` l.190 | cada visibilidade tem uso real: validação compartilhada é `internal`, o mapa de saldos só é tocado por `private` |
-| **EstruturasDeControle** | `if/else if` e laço `for` limitado em `resumoDoAutor` (l.347–358) e `listar` (l.332); `require` em `_validarCampos` (l.384) e `sacar` (l.303) | laços sempre limitados por `MAX_PAGINA` (20) para não estourar o gas |
-| **ArraysEMappings** | array dinâmico `Afirmacao[] afirmacoes` (l.79); mapping simples `saldos` (l.82) e `reputacao`; mapping aninhado `apoiou[id][conta]` (l.85); mapping→array `idsDoAutor` (l.88); `jaRegistrada` (l.91) | o array guarda a lista paginável; o aninhado garante 1 apoio por conta; o simples guarda saldos |
-| **StructsEEnums** | `struct Afirmacao` com 11 campos (l.31); `enum Sentimento` (l.24, igual aos rótulos do CSV); `enum Status` (l.27, ciclo de vida) | agrupa os dados de uma afirmação; o enum impede estados inválidos |
-| **Modificadores** | `apenasDono` (l.133); `afirmacaoExiste(id)` (l.139); `noEstado(id, esperado)` (l.145, com parâmetro); `apenasAutor(id)` (l.152) | evitam repetir checagens e deixam as regras de acesso/estado explícitas |
-| **EventosEErros** | 6 eventos com `indexed` (l.97–115); 10 erros customizados (l.117–126) usados com `revert`; `require` com mensagem | eventos alimentam o histórico do frontend; erros customizados dão dados (ex.: `ValorIncorreto(enviado, exigido)`) e custam menos gas que strings |
-
-### Segurança (resumo)
 - **Checks-Effects-Interactions** / *pull payment*: `resolver` e `cancelar` só alteram estado; o ETH sai em `sacar()`, que zera o saldo **antes** do `call`.
 - Controle de acesso: `resolver` só para o dono; `anexarEvidencia`/`cancelar` só para o autor.
 - Valor exato exigido no registro (nada de ETH “preso” por troco); strings com tamanho máximo; laços limitados.
@@ -141,7 +128,7 @@ cd frontend && python3 -m http.server 8000      # abra http://localhost:8000
 Ative “Mostrar redes de teste” (ou use o botão **Trocar para Sepolia** da dApp). Obtenha SepoliaETH em um
 faucet. Use **duas contas**: uma é o dono (quem fez o deploy), outra é o usuário. Nunca use carteira com fundos reais.
 
-### 7.6 Publicar na Vercel (obrigatório)
+### 7.6 Publicar na Vercel  
 Suba o repositório no GitHub → Vercel → *Add New Project* → importe o repositório → **Root Directory:
 `frontend`**, Framework Preset *Other*, sem build. A URL `https://<projeto>.vercel.app` (HTTPS) é a que vai no README.
 

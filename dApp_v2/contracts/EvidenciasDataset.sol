@@ -16,9 +16,7 @@ pragma solidity ^0.8.24;
 ///      Para evitar spam, quem afirma deixa um depósito (TAXA_REGISTRO): é
 ///      devolvido se a afirmação for confirmada e perdido se for refutada.
 contract EvidenciasDataset {
-    // ---------------------------------------------------------------
-    // [Recurso: StructsEEnums] — enums de estado + struct com 11 campos
-    // ---------------------------------------------------------------
+    
 
     /// @dev A ordem espelha os rótulos do dataset (coluna 3 do CSV).
     enum Sentimento { Positive, Negative, Neutral, Irrelevant }
@@ -42,11 +40,7 @@ contract EvidenciasDataset {
         uint256 criadaEm;       // block.timestamp
     }
 
-    // ---------------------------------------------------------------
-    // [Recurso: TiposDeDados] — uint256, int256, bool, address payable,
-    // string, bytes32, constant e immutable
-    // ---------------------------------------------------------------
-
+     
     /// @notice Dono/curador: único que confirma ou refuta afirmações.
     address payable public immutable DONO;
     /// @notice SHA-256 do CSV usado como base (imutável após o deploy).
@@ -71,9 +65,7 @@ contract EvidenciasDataset {
     ///         porque pode ficar negativa).
     mapping(address => int256) public reputacao;
 
-    // ---------------------------------------------------------------
-    // [Recurso: ArraysEMappings]
-    // ---------------------------------------------------------------
+  
 
     /// @notice Array dinâmico de todas as afirmações (o índice é o id).
     Afirmacao[] private afirmacoes;
@@ -90,10 +82,7 @@ contract EvidenciasDataset {
     /// @dev Impede registrar duas vezes a mesma afirmação ativa.
     mapping(bytes32 => bool) private jaRegistrada;
 
-    // ---------------------------------------------------------------
-    // [Recurso: EventosEErros] — eventos com `indexed` e erros customizados
-    // ---------------------------------------------------------------
-
+    
     event AfirmacaoRegistrada(
         uint256 indexed id,
         address indexed autor,
@@ -125,10 +114,7 @@ contract EvidenciasDataset {
     error AutoApoio(uint256 id);
     error SaldoInsuficiente(uint256 disponivel, uint256 solicitado);
 
-    // ---------------------------------------------------------------
-    // [Recurso: Modificadores] — 3 modificadores próprios (2 com parâmetro)
-    // ---------------------------------------------------------------
-
+    
     /// @dev Restringe a função ao dono (controle de acesso).
     modifier apenasDono() {
         if (msg.sender != DONO) revert ApenasDono(msg.sender);
@@ -153,11 +139,6 @@ contract EvidenciasDataset {
         if (afirmacoes[id].autor != msg.sender) revert ApenasAutor(id, msg.sender);
         _;
     }
-
-    // ---------------------------------------------------------------
-    // [Recurso: Funcoes] — constructor, external, public, internal, private,
-    // view, pure e payable
-    // ---------------------------------------------------------------
 
     /// @param _nome Nome do dataset.
     /// @param _hash SHA-256 do arquivo CSV (use `python3 scripts/evidencia.py hash`).
@@ -328,7 +309,7 @@ contract EvidenciasDataset {
             n = total - inicio;
         }
         lista = new Afirmacao[](n);
-        // [Recurso: EstruturasDeControle] laço limitado por MAX_PAGINA
+        
         for (uint256 i = 0; i < n; i++) {
             lista[i] = obterAfirmacao(inicio + i);
         }
@@ -344,7 +325,7 @@ contract EvidenciasDataset {
         uint256[] storage ids = idsDoAutor[autor];
         total = ids.length;
         uint256 limite = total > MAX_PAGINA ? MAX_PAGINA : total;
-        // [Recurso: EstruturasDeControle] laço limitado + if/else
+    
         for (uint256 i = 0; i < limite; i++) {
             Status s = afirmacoes[ids[i]].status;
             if (s == Status.Pendente) {

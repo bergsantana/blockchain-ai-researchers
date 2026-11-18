@@ -1,0 +1,1032 @@
+{
+	"compiler": {
+		"version": "0.8.34+commit.80d5c536"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [
+					{
+						"internalType": "string",
+						"name": "_nome",
+						"type": "string"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "_hash",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_linhas",
+						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "_uri",
+						"type": "string"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "constructor"
+			},
+			{
+				"inputs": [],
+				"name": "AfirmacaoDuplicada",
+				"type": "error"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "id",
+						"type": "uint256"
+					}
+				],
+				"name": "AfirmacaoInexistente",
+				"type": "error"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "id",
+						"type": "uint256"
+					},
+					{
+						"internalType": "address",
+						"name": "chamador",
+						"type": "address"
+					}
+				],
+				"name": "ApenasAutor",
+				"type": "error"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "chamador",
+						"type": "address"
+					}
+				],
+				"name": "ApenasDono",
+				"type": "error"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "id",
+						"type": "uint256"
+					}
+				],
+				"name": "AutoApoio",
+				"type": "error"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "string",
+						"name": "campo",
+						"type": "string"
+					}
+				],
+				"name": "CampoInvalido",
+				"type": "error"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "enum EvidenciasDataset.Status",
+						"name": "atual",
+						"type": "uint8"
+					},
+					{
+						"internalType": "enum EvidenciasDataset.Status",
+						"name": "esperado",
+						"type": "uint8"
+					}
+				],
+				"name": "EstadoInvalido",
+				"type": "error"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "id",
+						"type": "uint256"
+					}
+				],
+				"name": "JaApoiou",
+				"type": "error"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "disponivel",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "solicitado",
+						"type": "uint256"
+					}
+				],
+				"name": "SaldoInsuficiente",
+				"type": "error"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "enviado",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "exigido",
+						"type": "uint256"
+					}
+				],
+				"name": "ValorIncorreto",
+				"type": "error"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "uint256",
+						"name": "id",
+						"type": "uint256"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "apoiador",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "totalApoios",
+						"type": "uint256"
+					}
+				],
+				"name": "AfirmacaoApoiada",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "uint256",
+						"name": "id",
+						"type": "uint256"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "autor",
+						"type": "address"
+					}
+				],
+				"name": "AfirmacaoCancelada",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "uint256",
+						"name": "id",
+						"type": "uint256"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "autor",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "string",
+						"name": "entidade",
+						"type": "string"
+					},
+					{
+						"indexed": false,
+						"internalType": "enum EvidenciasDataset.Sentimento",
+						"name": "sentimento",
+						"type": "uint8"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "quantidade",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "bytes32",
+						"name": "evidenciaHash",
+						"type": "bytes32"
+					},
+					{
+						"indexed": false,
+						"internalType": "string",
+						"name": "evidenciaURI",
+						"type": "string"
+					}
+				],
+				"name": "AfirmacaoRegistrada",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "uint256",
+						"name": "id",
+						"type": "uint256"
+					},
+					{
+						"indexed": true,
+						"internalType": "enum EvidenciasDataset.Status",
+						"name": "status",
+						"type": "uint8"
+					},
+					{
+						"indexed": false,
+						"internalType": "int256",
+						"name": "reputacaoDoAutor",
+						"type": "int256"
+					}
+				],
+				"name": "AfirmacaoResolvida",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "uint256",
+						"name": "id",
+						"type": "uint256"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "autor",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "bytes32",
+						"name": "evidenciaHash",
+						"type": "bytes32"
+					},
+					{
+						"indexed": false,
+						"internalType": "string",
+						"name": "evidenciaURI",
+						"type": "string"
+					}
+				],
+				"name": "EvidenciaAnexada",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "quem",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "valor",
+						"type": "uint256"
+					}
+				],
+				"name": "Sacado",
+				"type": "event"
+			},
+			{
+				"inputs": [],
+				"name": "DATASET_HASH",
+				"outputs": [
+					{
+						"internalType": "bytes32",
+						"name": "",
+						"type": "bytes32"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "DONO",
+				"outputs": [
+					{
+						"internalType": "address payable",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "MAX_PAGINA",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "TAXA_REGISTRO",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "TOTAL_LINHAS",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "id",
+						"type": "uint256"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "evidenciaHash",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "string",
+						"name": "evidenciaURI",
+						"type": "string"
+					}
+				],
+				"name": "anexarEvidencia",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "id",
+						"type": "uint256"
+					}
+				],
+				"name": "apoiar",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					},
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"name": "apoiou",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "id",
+						"type": "uint256"
+					}
+				],
+				"name": "cancelar",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "hashLocal",
+						"type": "bytes32"
+					}
+				],
+				"name": "datasetConfere",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "string",
+						"name": "entidade",
+						"type": "string"
+					},
+					{
+						"internalType": "enum EvidenciasDataset.Sentimento",
+						"name": "sentimento",
+						"type": "uint8"
+					},
+					{
+						"internalType": "uint256",
+						"name": "quantidade",
+						"type": "uint256"
+					}
+				],
+				"name": "impressao",
+				"outputs": [
+					{
+						"internalType": "bytes32",
+						"name": "",
+						"type": "bytes32"
+					}
+				],
+				"stateMutability": "pure",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "inicio",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "limite",
+						"type": "uint256"
+					}
+				],
+				"name": "listar",
+				"outputs": [
+					{
+						"components": [
+							{
+								"internalType": "uint256",
+								"name": "id",
+								"type": "uint256"
+							},
+							{
+								"internalType": "address",
+								"name": "autor",
+								"type": "address"
+							},
+							{
+								"internalType": "string",
+								"name": "entidade",
+								"type": "string"
+							},
+							{
+								"internalType": "enum EvidenciasDataset.Sentimento",
+								"name": "sentimento",
+								"type": "uint8"
+							},
+							{
+								"internalType": "uint256",
+								"name": "quantidade",
+								"type": "uint256"
+							},
+							{
+								"internalType": "bytes32",
+								"name": "evidenciaHash",
+								"type": "bytes32"
+							},
+							{
+								"internalType": "string",
+								"name": "evidenciaURI",
+								"type": "string"
+							},
+							{
+								"internalType": "enum EvidenciasDataset.Status",
+								"name": "status",
+								"type": "uint8"
+							},
+							{
+								"internalType": "uint256",
+								"name": "apoios",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "deposito",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "criadaEm",
+								"type": "uint256"
+							}
+						],
+						"internalType": "struct EvidenciasDataset.Afirmacao[]",
+						"name": "lista",
+						"type": "tuple[]"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "nomeDataset",
+				"outputs": [
+					{
+						"internalType": "string",
+						"name": "",
+						"type": "string"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "id",
+						"type": "uint256"
+					}
+				],
+				"name": "obterAfirmacao",
+				"outputs": [
+					{
+						"components": [
+							{
+								"internalType": "uint256",
+								"name": "id",
+								"type": "uint256"
+							},
+							{
+								"internalType": "address",
+								"name": "autor",
+								"type": "address"
+							},
+							{
+								"internalType": "string",
+								"name": "entidade",
+								"type": "string"
+							},
+							{
+								"internalType": "enum EvidenciasDataset.Sentimento",
+								"name": "sentimento",
+								"type": "uint8"
+							},
+							{
+								"internalType": "uint256",
+								"name": "quantidade",
+								"type": "uint256"
+							},
+							{
+								"internalType": "bytes32",
+								"name": "evidenciaHash",
+								"type": "bytes32"
+							},
+							{
+								"internalType": "string",
+								"name": "evidenciaURI",
+								"type": "string"
+							},
+							{
+								"internalType": "enum EvidenciasDataset.Status",
+								"name": "status",
+								"type": "uint8"
+							},
+							{
+								"internalType": "uint256",
+								"name": "apoios",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "deposito",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "criadaEm",
+								"type": "uint256"
+							}
+						],
+						"internalType": "struct EvidenciasDataset.Afirmacao",
+						"name": "",
+						"type": "tuple"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "string",
+						"name": "entidade",
+						"type": "string"
+					},
+					{
+						"internalType": "enum EvidenciasDataset.Sentimento",
+						"name": "sentimento",
+						"type": "uint8"
+					},
+					{
+						"internalType": "uint256",
+						"name": "quantidade",
+						"type": "uint256"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "evidenciaHash",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "string",
+						"name": "evidenciaURI",
+						"type": "string"
+					}
+				],
+				"name": "registrarAfirmacao",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "id",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "payable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"name": "reputacao",
+				"outputs": [
+					{
+						"internalType": "int256",
+						"name": "",
+						"type": "int256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "id",
+						"type": "uint256"
+					},
+					{
+						"internalType": "bool",
+						"name": "confirmada",
+						"type": "bool"
+					}
+				],
+				"name": "resolver",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "autor",
+						"type": "address"
+					}
+				],
+				"name": "resumoDoAutor",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "pendentes",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "confirmadas",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "refutadas",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "total",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "sacar",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"name": "saldos",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "totalAfirmacoes",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "uriDataset",
+				"outputs": [
+					{
+						"internalType": "string",
+						"name": "",
+						"type": "string"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"author": "Projeto de estudo — introdução a blockchain",
+			"details": "O contrato NÃO guarda o dataset nem as evidências (seria caro demais).      Guarda apenas \"impressões digitais\" (hash SHA-256) e um ponteiro (URI):        - DATASET_HASH      → identifica exatamente qual versão do CSV é a base;        - evidenciaHash     → hash do arquivo de evidência (lista de tweet_ids);        - evidenciaURI      → onde baixar esse arquivo (GitHub raw, ipfs://...).      Qualquer pessoa baixa o CSV, confere o hash, refaz a contagem com      scripts/evidencia.py e confirma se a afirmação é verdadeira.      Para evitar spam, quem afirma deixa um depósito (TAXA_REGISTRO): é      devolvido se a afirmação for confirmada e perdido se for refutada.",
+			"kind": "dev",
+			"methods": {
+				"anexarEvidencia(uint256,bytes32,string)": {
+					"params": {
+						"evidenciaHash": "Novo SHA-256.",
+						"evidenciaURI": "Novo ponteiro.",
+						"id": "Afirmação a atualizar (precisa estar Pendente)."
+					}
+				},
+				"apoiar(uint256)": {
+					"params": {
+						"id": "Afirmação apoiada (Pendente; não pode ser a sua; 1 apoio por conta)."
+					}
+				},
+				"cancelar(uint256)": {
+					"params": {
+						"id": "Afirmação a cancelar (precisa estar Pendente)."
+					}
+				},
+				"constructor": {
+					"params": {
+						"_hash": "SHA-256 do arquivo CSV (use `python3 scripts/evidencia.py hash`).",
+						"_linhas": "Número de linhas do CSV (74682 no twitter_training.csv).",
+						"_nome": "Nome do dataset.",
+						"_uri": "Onde baixar o CSV."
+					}
+				},
+				"datasetConfere(bytes32)": {
+					"params": {
+						"hashLocal": "SHA-256 do arquivo que você baixou."
+					}
+				},
+				"impressao(string,uint8,uint256)": {
+					"details": "pure: não lê nem escreve estado."
+				},
+				"listar(uint256,uint256)": {
+					"params": {
+						"inicio": "Primeiro id a devolver.",
+						"limite": "Quantos itens (será cortado em MAX_PAGINA)."
+					}
+				},
+				"obterAfirmacao(uint256)": {
+					"params": {
+						"id": "Identificador."
+					}
+				},
+				"registrarAfirmacao(string,uint8,uint256,bytes32,string)": {
+					"details": "payable: exige exatamente TAXA_REGISTRO como depósito.",
+					"params": {
+						"entidade": "Entidade da coluna 2 do CSV (ex.: \"Borderlands\").",
+						"evidenciaHash": "SHA-256 do arquivo de evidência.",
+						"evidenciaURI": "Onde baixar o arquivo de evidência.",
+						"quantidade": "Quantas linhas têm essa entidade + sentimento.",
+						"sentimento": "Sentimento da coluna 3 do CSV."
+					},
+					"returns": {
+						"id": "Identificador da nova afirmação."
+					}
+				},
+				"resolver(uint256,bool)": {
+					"details": "Confirmada → depósito volta ao autor e reputação +1.      Refutada   → depósito vai para o dono e reputação −1.",
+					"params": {
+						"confirmada": "true = confirma; false = refuta.",
+						"id": "Afirmação a resolver (precisa estar Pendente)."
+					}
+				},
+				"resumoDoAutor(address)": {
+					"details": "Percorre no máximo MAX_PAGINA ids do autor (os mais antigos)."
+				}
+			},
+			"stateVariables": {
+				"MAX_ENTIDADE": {
+					"details": "Limites de tamanho (em bytes) para strings vindas do usuário."
+				},
+				"idsDoAutor": {
+					"details": "Mapping → array: ids das afirmações de cada autor."
+				},
+				"jaRegistrada": {
+					"details": "Impede registrar duas vezes a mesma afirmação ativa."
+				}
+			},
+			"title": "EvidenciasDataset",
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {
+				"DATASET_HASH()": {
+					"notice": "SHA-256 do CSV usado como base (imutável após o deploy)."
+				},
+				"DONO()": {
+					"notice": "Dono/curador: único que confirma ou refuta afirmações."
+				},
+				"MAX_PAGINA()": {
+					"notice": "Máximo de itens devolvidos por consulta paginada."
+				},
+				"TAXA_REGISTRO()": {
+					"notice": "Depósito exigido de quem registra uma afirmação."
+				},
+				"TOTAL_LINHAS()": {
+					"notice": "Total de linhas do CSV (teto lógico para qualquer contagem)."
+				},
+				"anexarEvidencia(uint256,bytes32,string)": {
+					"notice": "O autor troca a evidência (ex.: corrigiu o arquivo ou mudou o link)."
+				},
+				"apoiar(uint256)": {
+					"notice": "Registra que você reproduziu a contagem e concorda com a afirmação."
+				},
+				"apoiou(uint256,address)": {
+					"notice": "Mapping aninhado: id da afirmação → endereço → já apoiou?"
+				},
+				"cancelar(uint256)": {
+					"notice": "O autor desiste da afirmação e recupera o depósito."
+				},
+				"datasetConfere(bytes32)": {
+					"notice": "Confere se um hash (calculado do SEU CSV) é o do dataset oficial."
+				},
+				"impressao(string,uint8,uint256)": {
+					"notice": "Impressão digital de uma afirmação (usada contra duplicatas)."
+				},
+				"listar(uint256,uint256)": {
+					"notice": "Lista afirmações em páginas de no máximo MAX_PAGINA itens."
+				},
+				"nomeDataset()": {
+					"notice": "Nome legível do dataset."
+				},
+				"obterAfirmacao(uint256)": {
+					"notice": "Lê uma afirmação pelo id."
+				},
+				"registrarAfirmacao(string,uint8,uint256,bytes32,string)": {
+					"notice": "Registra uma afirmação sobre o dataset e o caminho até a evidência."
+				},
+				"reputacao(address)": {
+					"notice": "Reputação: +1 por afirmação confirmada, −1 por refutada (int256         porque pode ficar negativa)."
+				},
+				"resolver(uint256,bool)": {
+					"notice": "O dono confere a evidência fora da cadeia e decide o resultado."
+				},
+				"resumoDoAutor(address)": {
+					"notice": "Resume as afirmações de um autor por estado."
+				},
+				"sacar()": {
+					"notice": "Retira todo o saldo creditado ao chamador (pull payment)."
+				},
+				"saldos(address)": {
+					"notice": "Mapping simples: saldo retirável (pull payment) de cada endereço."
+				},
+				"totalAfirmacoes()": {
+					"notice": "Quantas afirmações existem."
+				},
+				"uriDataset()": {
+					"notice": "Onde baixar o CSV original."
+				}
+			},
+			"notice": "Registro on-chain de AFIRMAÇÕES (claims) sobre um dataset público de         tweets (twitter_training.csv: tweet_id, entidade, sentimento, texto)         e de COMO CHEGAR às evidências que as sustentam.",
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"dApp_v2/contracts/EvidenciasDataset.sol": "EvidenciasDataset"
+		},
+		"evmVersion": "osaka",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"dApp_v2/contracts/EvidenciasDataset.sol": {
+			"keccak256": "0x2ee3e67e6f08d88b0de22ed86a0c205f6f1058c4357d44d33a485e8d411eb44a",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://9fcec8f419044aba404681634d17ff8f4f71a084803c2be97d85af05a2d3d96c",
+				"dweb:/ipfs/QmZtNnyNxypVER638v9TuFoDTKhrEN7uQ5xESUxKKKZMme"
+			]
+		}
+	},
+	"version": 1
+}
